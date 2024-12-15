@@ -9,5 +9,16 @@
 
   - name: Installing nodejs18 version
     ansible.builtin.dnf:
-      name: nodejs = 18
-      state: present
+      name: "nodejs=18"
+#       state: present
+
+
+#       ---
+# - name: Install a specific version of a package
+#   hosts: your_hosts_group
+#   become: true
+#   tasks:
+#     - name: Install a specific version of the package
+#       ansible.builtin.apt:
+#         name: "your_package_name=1.2.3-1"
+#         state: present
