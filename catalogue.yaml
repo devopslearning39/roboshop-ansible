@@ -6,19 +6,11 @@
     ansible.builtin.dnf:
       name: nodejs
       state: absent
+      
+  - name: Enabling nodejs-18 version 
+    ansible.builtin.shell: dnf module enable nodejs:18 -y
 
-  - name: Installing nodejs18 version
-    ansible.builtin.yum:
-      name: nodejs=18
+  - name: Installing nodejs
+    ansible.builtin.package:
+      name: nodejs
       state: present
-
-
-#       ---
-# - name: Install a specific version of a package
-#   hosts: your_hosts_group
-#   become: true
-#   tasks:
-#     - name: Install a specific version of the package
-#       ansible.builtin.apt:
-#         name: "your_package_name=1.2.3-1"
-#         state: present
