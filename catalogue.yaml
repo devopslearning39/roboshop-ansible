@@ -8,7 +8,7 @@
       state: absent
 
   - name: Installing nodejs18 version
-    ansible.builtin.apt:
+    ansible.builtin.yum:
       name: "nodejs=18"
       state: present
 
