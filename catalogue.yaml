@@ -1,0 +1,12 @@
+- name: Catalogue server
+  hosts: catalogue
+  tasks:
+  - name: Removing old node version
+    ansible.builtin.dnf:
+      name: nodejs
+      state: absent
+
+  - name: Installing nodejs18 version
+    ansible.builtin.dnf:
+      name: nodejs == 18
+      state: present
