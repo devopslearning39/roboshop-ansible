@@ -18,8 +18,8 @@
         enabled: yes
         state: started
 
-    - name: Replace text to configure ip address
-      replace:
+    - name: Allowing remote access
+      ansible.builtin.replace:
         path: /etc/mongod.conf
         regex: '127.0.0.1'
         replace: '0.0.0.0'
