@@ -36,7 +36,7 @@
       remote_src: yes
 
   - name: Change the working directory and run npm install
-    ansible.buildin.command: npm install
+    ansible.builtin.command: npm install
     args:
       chdir: /app
 
