@@ -26,7 +26,7 @@
 
   - name: Download the catalogue application code
     ansible.builtin.get_url:
-      name: https://roboshop-builds.s3.amazonaws.com/catalogue.zip
+      url: https://roboshop-builds.s3.amazonaws.com/catalogue.zip
       dest: /tmp
 
   - name: Unarchive/unzipping catalogue file that is already on the remote machine
