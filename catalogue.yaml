@@ -9,7 +9,7 @@
 
   - name: Installing nodejs18 version
     ansible.builtin.yum:
-      name: "nodejs=18"
+      name: nodejs=18
       state: present
 
 
