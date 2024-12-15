@@ -1,5 +1,6 @@
 - name: Catalogue server
   hosts: catalogue
+  become: yes
   tasks:
   - name: Removing old node version
     ansible.builtin.dnf:
