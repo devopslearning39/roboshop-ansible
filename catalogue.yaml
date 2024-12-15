@@ -9,5 +9,5 @@
 
   - name: Installing nodejs18 version
     ansible.builtin.dnf:
-      name: nodejs == 18
+      name: nodejs-18
       state: present
