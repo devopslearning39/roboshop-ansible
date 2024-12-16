@@ -1,0 +1,78 @@
+- name: shipping component
+  hosts: shippig
+  become: true
+  tasks:
+  - name: install maven
+    ansible.builtin.package:
+      name: maven
+      state: present
+
+  - name: useradd roboshop
+    ansible.builtin.user:
+      name: roboshop
+
+  - name: removing app directory
+    ansible.builtin.file:
+      name: /app
+      state: absent
+
+  - name: creating app directory
+    ansible.builtin.file:
+      name: /app
+      state: present
+
+  - name: downloading the application code
+    ansible.builtin.get_url:
+      url: curl -L -o /tmp/shipping.zip https://roboshop-builds.s3.amazonaws.com/shipping.zip
+      src: /tmp
+
+  - name: unzipping
+    ansible.builtin.unarchive:
+      src: /tmp/shipping.zip
+      dest: /app
+      remote_src: yes
+
+  - name: mvn clean package
+    ansible.builtin.command: mvn clean package
+    args:
+      chdir /app
+
+
+
+  - name: renaming jar file
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
+    args:
+      chdir: /app
+
+  - name: copying shipping.service
+    ansible.builtin.copy:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+
+  - name: daemon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+
+# Let's start the service later
+
+  - name: install mysql
+    ansible.builtin.dnf:
+      name: mysql
+      state: present
+
+  - name: check cites schema exists or not
+    ansible.builtin.command: mysql -h mysql.daws76s.online -uroot -p{{mysql_password}} -sN -e "SELECT COUNT(*) FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'cities'"
+    register: schema
+
+  - name: print output
+    ansible.builtin.debug:
+      msg: "Cites schema is {{schema}}"
+
+  - name: loading schema
+    ansible.builtin.shell: mysql -h mysql.jella.fun -uroot -pRoboShop@1 < /app/schema/shipping.sql
+    when: schema.stdout != "1"
+
+  - name: restarting shipping
+    ansible.builtin.service:
+      name: shipping
+      state: restated

@@ -1,0 +1,57 @@
+- name: payment component
+  hosts: payment
+  become: true
+  tasks:
+  - name: installing packages
+    ansible.builtin.dnf:
+      name: {{item}}
+      state: present
+    loop:
+    - python36
+    - gcc
+    - python3-devel
+
+  - name: adding roboshop user
+    ansible.builtin.user:
+      name: roboshop
+
+  - name: removing app directory
+    ansible.builtin.file:
+      name: /app
+      state: absent
+
+  - name: creating app directory
+    ansible.builtin.file:
+      name: /app
+      state: directory
+
+  - name: downloading source code
+    ansible.builtin.get_url:
+      get_url: https://roboshop-builds.s3.amazonaws.com/payment.zip
+      dest: /tmp
+
+  - name: unzipping code
+    ansible.builtin.unarchive:
+      src: /tmp/payment.zip
+      dest: /app
+      remote_src: yes
+
+  - name: installing dependencies
+    ansible.builtin.shell: pip3.6 install -r requirements.txt
+    args:
+      chdir: /app
+
+  - name: copying payment.service module
+    ansible.builtin.copy:
+      src: payment.service
+      dest: /etc/systemd/system/payment.service
+
+  - name: daemon reload
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+
+  - name: enable and start paymnet
+    ansible.builtin.service:
+      name: payment
+      enabled: yes
+      state: started
