@@ -1,5 +1,5 @@
 - name: shipping component
-  hosts: shippig
+  hosts: shipping
   become: true
   tasks:
   - name: install maven
